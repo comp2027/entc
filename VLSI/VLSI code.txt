@@ -57,7 +57,10 @@ end Behavioral;
 after in behavioral source file  paste the code and check the syntax  then select the test bench waveform in simulator 
 
 
-Exp1: Shift Register
+
+
+
+Exp2: Shift Register
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
@@ -186,6 +189,9 @@ begin
 
 end Behavioral;
 
+
+
+
 Exp3: Updown Counter
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
@@ -300,6 +306,11 @@ BEGIN
     END PROCESS;
 
 END behavior;
+
+
+
+
+
 Exp4:FIFO Memory
 
 library IEEE;
@@ -427,6 +438,10 @@ begin
     end process;
 
 end behavior;
+
+
+
+
 
 Exp5:Keypad Interface
 
