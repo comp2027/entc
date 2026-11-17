@@ -128,67 +128,94 @@ end Behavioral;
 
 select the VHDL Test bench and paste the test bench code after that under the syntax simulate the code 
 
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
 
-entity frf is
-    Port (
-        clk  : in STD_LOGIC;
-        load : in STD_LOGIC;
-        rst  : in STD_LOGIC;
-        s    : in STD_LOGIC_VECTOR(1 downto 0);
-        din  : in STD_LOGIC_VECTOR(3 downto 0);
-        q    : out STD_LOGIC_VECTOR(3 downto 0)
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+ENTITY hdgey_vhd IS
+END hdgey_vhd;
+
+ARCHITECTURE behavior OF hdgey_vhd IS
+
+    COMPONENT frf
+    PORT(
+        clk  : IN std_logic;
+        load : IN std_logic;
+        rst  : IN std_logic;
+        s    : IN std_logic_vector(1 downto 0);
+        din  : IN std_logic_vector(3 downto 0);
+        q    : OUT std_logic_vector(3 downto 0)
     );
-end frf;
+    END COMPONENT;
 
-architecture Behavioral of frf is
+    SIGNAL clk  : std_logic := '0';
+    SIGNAL load : std_logic := '0';
+    SIGNAL rst  : std_logic := '0';
+    SIGNAL s    : std_logic_vector(1 downto 0) := "00";
+    SIGNAL din  : std_logic_vector(3 downto 0) := "0000";
+    SIGNAL q    : std_logic_vector(3 downto 0);
 
-    signal qt : STD_LOGIC_VECTOR(3 downto 0);
+BEGIN
 
-begin
+    uut: frf PORT MAP(
+        clk  => clk,
+        load => load,
+        rst  => rst,
+        s    => s,
+        din  => din,
+        q    => q
+    );
 
-    process(clk, rst)
-    begin
+    -- Clock Generation
+    clk_process : PROCESS
+    BEGIN
+        clk <= '0';
+        WAIT FOR 10 ns;
+        clk <= '1';
+        WAIT FOR 10 ns;
+    END PROCESS;
 
-        if (rst = '1') then
-            qt <= "0000";
+    -- Input Stimulus
+    tb : PROCESS
+    BEGIN
 
-        elsif rising_edge(clk) then
+        -- Reset
+        rst <= '1';
+        WAIT FOR 20 ns;
+        rst <= '0';
 
-            case s is
+        -- Parallel Load
+        s <= "01";
+        din <= "1010";
+        WAIT FOR 20 ns;
 
-                when "00" =>
-                    qt(0) <= din(0);
-                    qt(3 downto 1) <= qt(2 downto 0);
+        -- Shift Operation
+        s <= "00";
+        din <= "0001";
+        WAIT FOR 20 ns;
 
-                when "01" =>
-                    qt <= din;
+        din <= "0000";
+        WAIT FOR 20 ns;
 
-                when "10" =>
-                    if (load = '1') then
-                        qt <= din;
-                    else
-                        qt(3 downto 1) <= qt(2 downto 0);
-                        qt(0) <= '0';
-                    end if;
+        -- Load Operation
+        s <= "10";
+        load <= '1';
+        din <= "1100";
+        WAIT FOR 20 ns;
 
-                when "11" =>
-                    qt <= din;
+        -- Shift Operation
+        load <= '0';
+        WAIT FOR 20 ns;
 
-                when others =>
-                    qt <= "0000";
+        -- Parallel Load
+        s <= "11";
+        din <= "0110";
+        WAIT FOR 20 ns;
 
-            end case;
+        WAIT;
+    END PROCESS;
 
-        end if;
-
-    end process;
-
-    q <= qt;
-
-end Behavioral;
-
+END behavior;
 
 
 
